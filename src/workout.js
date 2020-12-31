@@ -10,7 +10,7 @@ export default class Workout extends React.Component {
   handleWorkoutTextChange(e) {
   	if(this.timeout) clearTimeout(this.timeout);
   	this.timeout = setTimeout(() => {
-      this.props.handleWorkoutTextChange(e.target.value, this.props.value.id);
+      this.props.handleWorkoutTextChange(e.target.value, this.props.day);
     }, 500);
   }
 
@@ -19,7 +19,7 @@ export default class Workout extends React.Component {
 			<div className="form-group">
     		<label htmlFor="workoutInput">Workout</label>
     		<textarea type="form-text" className="form-control border-0" id="workoutInput"
-    					onChange={this.handleWorkoutTextChange}>{this.props.value.description}</textarea>
+    					onChange={this.handleWorkoutTextChange}>{this.props.day.workout.description}</textarea>
   			</div>
 		);
 	}

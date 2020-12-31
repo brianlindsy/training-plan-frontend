@@ -10,7 +10,7 @@ export default class Review extends React.Component {
   handleReviewTextChange(e) {
   	if(this.timeout) clearTimeout(this.timeout);
   	this.timeout = setTimeout(() => {
-    	this.props.handleReviewTextChange(e.target.value, this.props.value.id);
+    	this.props.handleReviewTextChange(e.target.value, this.props.day);
     }, 500);
   }
 
@@ -19,7 +19,7 @@ export default class Review extends React.Component {
 			<div className="form-group">
     		<label htmlFor="reviewInput">Review</label>
     		<textarea type="form-control form-text" className="form-control border-0" id="reviewInput"
-    					onChange={this.handleReviewTextChange}>{this.props.value.description}</textarea>
+    					onChange={this.handleReviewTextChange}>{this.props.day.review.description}</textarea>
   			</div>
 		);
 	}

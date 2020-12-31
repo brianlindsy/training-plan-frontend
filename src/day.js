@@ -6,15 +6,15 @@ import 'bootstrap/dist/css/bootstrap.css';
 export default class Day extends React.Component {
   	render() {
   		return (
-    		<div className="card" key={this.props.value}>
-  				<div className="card-body">
-    			<h5 className="card-title">{this.parseDate(this.props.value.date)}</h5>
-    			<form>
-  					<Workout handleWorkoutTextChange={this.props.handleWorkoutTextChange} value={this.props.value.workout} key={this.props.value.workout.id} />
-  					<Review handleReviewTextChange={this.props.handleReviewTextChange} value={this.props.value.review} key={this.props.value.review.id} />
-				  </form>
-  				</div>
-			</div>
+    		  <div className="card h-100" key={this.props.day.id}>
+  				  <div className="card-body">
+    			    <h5 className="card-title">{this.parseDate(this.props.day.date)}</h5>
+              <form>
+  					    <Workout handleWorkoutTextChange={this.props.handleWorkoutTextChange} day={this.props.day} key={this.props.day.workout.id} />
+  					    <Review handleReviewTextChange={this.props.handleReviewTextChange} day={this.props.day} key={this.props.day.review.id} />
+				      </form>
+  				  </div>
+          </div>
   		);
 	}
 
