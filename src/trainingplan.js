@@ -1,6 +1,7 @@
 import React from 'react';
 import Calendar from './calendar.js';
 import AddWeekButton from './addWeekButton.js'
+import $ from 'jquery';
 
 export default class TrainingPlan extends React.Component {
 	constructor(props) {
@@ -10,16 +11,10 @@ export default class TrainingPlan extends React.Component {
     	this.state = {
     		  error: null,
       		isLoaded: false,
-      		plan: { 
-            weeks: 
-            [
-              {
-                days: []
-              }
-            ]
-          }
+      		plan:{weeks:[{days:[]}]}
     	};
 
+      this.showSuccessSavedAlert = this.showSuccessSavedAlert.bind(this);
       this.handleAddNewWeekOnClick = this.handleAddNewWeekOnClick.bind(this);
     	this.handleReviewTextChange = this.handleReviewTextChange.bind(this);
     	this.handleWorkoutTextChange = this.handleWorkoutTextChange.bind(this);
@@ -27,16 +22,24 @@ export default class TrainingPlan extends React.Component {
       this.persistTrainingPlanUpdate = this.persistTrainingPlanUpdate.bind(this);
   	}
 
+    showSuccessSavedAlert(){
+      $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+        $("#success-alert").slideUp(500);
+      });
+    }
+
   	handleReviewTextChange(reviewText, day) {
       var newDay = day;
       newDay.review.description = reviewText;
   		this.persistDayUpdate(newDay);
+      this.showSuccessSavedAlert();
   	}
   
   	handleWorkoutTextChange(workoutText, day) {
   		var newDay = day;
       newDay.workout.description = workoutText;
       this.persistDayUpdate(newDay);
+      this.showSuccessSavedAlert();
   	}
 
     persistTrainingPlanUpdate(plan){
@@ -146,10 +149,14 @@ export default class TrainingPlan extends React.Component {
   	render() {
     	return (
       		<div className="trainingPlan">
-          		<Calendar handleReviewTextChange={this.handleReviewTextChange}
+            <div className="alert alert-success alert-dismissable" style={{display: 'none'}} id="success-alert">
+              <button type="button" className="close" data-dismiss="alert">x</button>
+              <strong>Success! </strong> Your information has been saved.
+            </div>
+          	<Calendar handleReviewTextChange={this.handleReviewTextChange}
           				handleWorkoutTextChange={this.handleWorkoutTextChange}
           				plan={this.state.plan}/>
-              <AddWeekButton handleAddNewWeekOnClick={this.handleAddNewWeekOnClick} />
+            <AddWeekButton handleAddNewWeekOnClick={this.handleAddNewWeekOnClick} />
       		</div>
     	);
   	}

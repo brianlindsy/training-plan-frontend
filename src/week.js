@@ -12,7 +12,7 @@ export default class Week extends React.Component {
           handleReviewTextChange={this.props.handleReviewTextChange} />
       );
       return (
-        <div className="row">
+        <div>
           <label>Week {this.props.weekNumber}</label>
           <div className="card-deck">
             {renderedDays}
