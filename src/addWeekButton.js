@@ -13,7 +13,7 @@ export default class AddWeekButton extends React.Component {
 
 	render(){
 		return (
-		  <button onClick={this.handleAddNewWeekOnClick} type="button" className="btn btn-primary">Add New Week</button>
+		  <button onClick={this.handleAddNewWeekOnClick} type="button" className="btn btn-primary mt-3 ml-2">Add New Week +</button>
 		);
 	}
 }

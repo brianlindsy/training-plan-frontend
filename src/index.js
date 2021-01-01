@@ -1,10 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import TrainingPlan from './trainingplan.js';
-
-// ========================================
+import ReactDOM from "react-dom";
+import App from './app.js';
+import {BrowserRouter as Router} from "react-router-dom";
 
 ReactDOM.render(
-  <TrainingPlan />,
-  document.getElementById('root')
+  <Router>
+    <App />
+  </Router>,
+  document.getElementById("root")
 );

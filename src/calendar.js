@@ -1,5 +1,6 @@
 import React from 'react';
 import Week from './week.js';
+import AddWeekButton from './addWeekButton.js';
 import 'bootstrap/dist/css/bootstrap.css';
 
 export default class Calendar extends React.Component {
@@ -10,7 +11,10 @@ export default class Calendar extends React.Component {
                 handleReviewTextChange={this.props.handleReviewTextChange}/>
       );
     	return (
-    		<div>{renderedWeeks}</div>
+    		<div>
+          {renderedWeeks}
+          <AddWeekButton handleAddNewWeekOnClick={this.props.handleAddNewWeekOnClick} />
+        </div>
     	);
   	}
 }
