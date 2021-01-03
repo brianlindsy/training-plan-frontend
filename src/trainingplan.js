@@ -6,7 +6,11 @@ import {withRouter} from "react-router-dom";
 class TrainingPlan extends React.Component {
     
   	componentDidMount() {
-      this.props.loadTrainingPlan(this.props.match.params.planId);
+      if(this.props.match.params.planId != null){
+        this.props.loadTrainingPlan(this.props.match.params.planId);
+      } else {
+        this.props.createNewTrainingPlan();
+      }
   	}
 
   	render() {

@@ -12,6 +12,7 @@ export default class Calendar extends React.Component {
       );
     	return (
     		<div>
+          <div className="container text-center"><h3>{this.props.plan.title}</h3></div>
           {renderedWeeks}
           <AddWeekButton handleAddNewWeekOnClick={this.props.handleAddNewWeekOnClick} />
         </div>
