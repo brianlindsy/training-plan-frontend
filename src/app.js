@@ -170,10 +170,7 @@ export default class App extends React.Component {
       };
       fetch("http://localhost:8080/rest/plan", postRequestOptions)
       .then(res1 => res1.json())
-      .then((createNewPlanResult) => {
-        fetch("http://localhost:8080/rest/plan/" + createNewPlanResult.planUniqueId)
-          .then(res2 => res2.json())
-          .then(
+      .then(
             (result) => {
               this.setState({
                 isLoaded: true,
@@ -187,8 +184,7 @@ export default class App extends React.Component {
                 isLoaded: true,
                 error
               });
-          })
-        })
+      })
     }
 
     loadTrainingPlan(planUniqueId){
