@@ -1,4 +1,6 @@
 import React from 'react';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+import './trainingplan.css';
 
 export default class Review extends React.Component {
 	constructor(props) {
@@ -17,10 +19,12 @@ export default class Review extends React.Component {
 	render(){
 		return (
 			<div className="form-group">
-    		<label htmlFor="reviewInput">How did it go?</label>
-    		<textarea type="form-control form-text" className="form-control border-0" id="reviewInput"
-    					onChange={this.handleReviewTextChange}>{this.props.day.review.description}</textarea>
-  			</div>
+        <label htmlFor="reviewInput">Comments</label>
+        <textarea rows="5" type="text" class="form-control border-0"
+               onChange={this.handleReviewTextChange}>
+               {this.props.day.review.description}
+        </textarea>
+  		</div>
 		);
 	}
 }

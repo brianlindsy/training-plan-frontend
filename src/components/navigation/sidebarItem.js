@@ -9,7 +9,7 @@ export default class SideBarItem extends React.Component {
                 <a className="nav-link"
                 	href={"/coach/" + this.props.coachId + "/dashboard/plan/" + this.props.planUniqueId}>
                   <span data-feather="home"></span>
-                  {this.props.title}
+                  {this.props.plan.title}
                 </a>
             </li>
     	);

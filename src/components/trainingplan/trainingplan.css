@@ -1,0 +1,13 @@
+.card {
+    min-height: 400px;
+    min-width: 300px;
+    margin-right: 5px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+p {
+   font-size: 13px!important;
+}

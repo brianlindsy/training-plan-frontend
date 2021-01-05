@@ -1,6 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import Day from './day.js'
+import './trainingplan.css';
 
 export default class Week extends React.Component {
   	render() {
@@ -12,11 +13,11 @@ export default class Week extends React.Component {
           handleReviewTextChange={this.props.handleReviewTextChange} />
       );
       return (
-        <div>
-          <label>Week {this.props.weekNumber}</label>
-          <div className="card-deck">
-            {renderedDays}
-          </div>
+        <div id={"Week" + this.props.weekNumber}>
+        <label>Week {this.props.weekNumber}</label>
+            <div class="d-flex flex-row flex-nowrap overflow-auto">
+              {renderedDays}
+            </div>
         </div>
       );
 	  }

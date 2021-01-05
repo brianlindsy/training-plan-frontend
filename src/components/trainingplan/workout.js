@@ -1,4 +1,5 @@
 import React from 'react';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 export default class Workout extends React.Component {
 	constructor(props) {
@@ -17,10 +18,12 @@ export default class Workout extends React.Component {
 	render(){
 		return (
 			<div className="form-group">
-    		<label htmlFor="workoutInput">Workout Description</label>
-    		<textarea type="form-text" className="form-control border-0" id="workoutInput"
-    					onChange={this.handleWorkoutTextChange}>{this.props.day.workout.description}</textarea>
-  			</div>
+        <label htmlFor="workoutInput">Todays Workout</label>
+    		<textarea rows="5" type="text" class="form-control border-0"
+                  onChange={this.handleWorkoutTextChange}>
+                  {this.props.day.workout.description}
+        </textarea>
+      </div>
 		);
 	}
 }

@@ -1,9 +1,10 @@
 import React from "react";
 import {Switch,Route} from "react-router-dom";
-import TrainingPlan from './trainingplan.js';
-import CoachDashboard from './coachDashboard.js';
-import CreateCoach from './createCoach.js';
-import Home from './home.js';
+import TrainingPlan from './components/scenes/trainingplan.js';
+import CoachDashboard from './components/scenes/coachDashboard.js';
+import CreateCoach from './components/scenes/createCoach.js';
+import Home from './components/scenes/home.js';
+import NavBarTop from './components/navigation/navbartop.js';
 import $ from 'jquery';
 
 export default class App extends React.Component {
@@ -19,6 +20,7 @@ export default class App extends React.Component {
       		plan:{planUniqueId:null, weeks:[{days:[]}]}
     	};
 
+      this.handleTitleChange = this.handleTitleChange.bind(this);
       this.signInOrCreateCoach = this.signInOrCreateCoach.bind(this);
       this.handleAddNewPlanOnClick = this.handleAddNewPlanOnClick.bind(this);
       this.createNewTrainingPlan = this.createNewTrainingPlan.bind(this);
@@ -52,8 +54,15 @@ export default class App extends React.Component {
       this.showSuccessSavedAlert();
     }
 
+    handleTitleChange(titleText, plan){
+      console.log("update pla to: " + JSON.stringify(plan));
+      var newPlan = plan;
+      newPlan.title = titleText;
+      this.persistTrainingPlanUpdate(newPlan);
+    }
+
     persistTrainingPlanUpdate(plan){
-      const postRequestOptions = {
+      const putRequestOptions = {
           method: 'PUT',
           body: JSON.stringify(plan),
           headers: {
@@ -63,7 +72,21 @@ export default class App extends React.Component {
       };
       console.log("http://localhost:8080/rest/plan/" + plan.planUniqueId);
       console.log(JSON.stringify(plan));
-      fetch("http://localhost:8080/rest/day/" + plan.planUniqueId, postRequestOptions)
+      fetch("http://localhost:8080/rest/plan/" + plan.planUniqueId, putRequestOptions)
+        .then(res => res.json())
+        .then(
+          (result) => {
+            this.setState({
+            plan: result
+          });
+          },
+            (error) => {
+              console.log(error);
+              this.setState({
+                isLoaded: true,
+                error
+              });
+          })
     }
 
     persistDayUpdate(day){
@@ -252,20 +275,23 @@ export default class App extends React.Component {
                             handleReviewTextChange={this.handleReviewTextChange}
                             handleWorkoutTextChange={this.handleWorkoutTextChange}
                             handleAddNewWeekOnClick={this.handleAddNewWeekOnClick}
-                            match={this.props.match}/>
+                            match={this.props.match}
+                            handleTitleChange={this.handleTitleChange}/>
             </Route>
 
             {/* Note how these two routes are ordered. The more specific
             path="/contact/:id" comes before path="/contact" so that
             route will render when viewing an individual contact */}
             <Route path="/plan/:planId">
+              <NavBarTop/>
               <TrainingPlan loadTrainingPlan={this.loadTrainingPlan}
                             plan={this.state.plan}
                             createNewTrainingPlan={this.createNewTrainingPlan}
                             handleReviewTextChange={this.handleReviewTextChange}
                             handleWorkoutTextChange={this.handleWorkoutTextChange}
                             handleAddNewWeekOnClick={this.handleAddNewWeekOnClick}
-                            match={this.props.match}/>
+                            match={this.props.match}
+                            handleTitleChange={this.handleTitleChange}/>
             </Route>
 
             <Route path="/createCoach">
@@ -281,7 +307,8 @@ export default class App extends React.Component {
                               handleWorkoutTextChange={this.handleWorkoutTextChange}
                               handleAddNewWeekOnClick={this.handleAddNewWeekOnClick}
                               match={this.props.match}
-                              handleAddNewPlanOnClick={this.handleAddNewPlanOnClick}/>
+                              handleAddNewPlanOnClick={this.handleAddNewPlanOnClick}
+                              handleTitleChange={this.handleTitleChange}/>
             </Route>
 
             {/* If none of the previous routes render anything,
