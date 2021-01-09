@@ -20,6 +20,7 @@ export default class App extends React.Component {
       		plan:{planUniqueId:null, weeks:[{days:[]}]}
     	};
 
+      this.handleRunTypeClick = this.handleRunTypeClick.bind(this);
       this.handleTitleChange = this.handleTitleChange.bind(this);
       this.signInOrCreateCoach = this.signInOrCreateCoach.bind(this);
       this.handleAddNewPlanOnClick = this.handleAddNewPlanOnClick.bind(this);
@@ -28,9 +29,8 @@ export default class App extends React.Component {
       this.loadTrainingPlan = this.loadTrainingPlan.bind(this);
       this.showSuccessSavedAlert = this.showSuccessSavedAlert.bind(this);
       this.handleAddNewWeekOnClick = this.handleAddNewWeekOnClick.bind(this);
-    	this.handleReviewTextChange = this.handleReviewTextChange.bind(this);
-    	this.handleWorkoutTextChange = this.handleWorkoutTextChange.bind(this);
-    	this.persistDayUpdate = this.persistDayUpdate.bind(this);
+    	this.handleUserLogTextChange = this.handleUserLogTextChange.bind(this);
+    	this.handleWorkoutCoachNotesTextChange = this.handleWorkoutCoachNotesTextChange.bind(this);
       this.persistTrainingPlanUpdate = this.persistTrainingPlanUpdate.bind(this);
   	}
 
@@ -40,22 +40,50 @@ export default class App extends React.Component {
       });
     }
 
-    handleReviewTextChange(reviewText, day) {
+    updatePlanWithDay(dayToAdd){
+      var currentPlan = this.state.plan;
+      currentPlan.weeks.forEach(week => {
+        week.days.forEach(day => {
+          if(day.id === dayToAdd.id){
+            day = dayToAdd;
+          }
+        });
+      });
+      return currentPlan;
+    }
+
+    handleRunTypeClick(selectedRunType, day){
       var newDay = day;
-      newDay.review.description = reviewText;
-      this.persistDayUpdate(newDay);
+      newDay.workout.workoutType.workoutTypeName = selectedRunType;
+      var newPlan = this.updatePlanWithDay(newDay);
+      this.persistTrainingPlanUpdate(newPlan);
+    }
+
+    handleUserLogTextChange(reviewText, day) {
+      var newDay = day;
+      newDay.workout.userLogEntry = reviewText;
+      var newPlan = this.updatePlanWithDay(newDay);
+      this.persistTrainingPlanUpdate(newPlan);
       this.showSuccessSavedAlert();
     }
   
     handleWorkoutTextChange(workoutText, day) {
       var newDay = day;
       newDay.workout.description = workoutText;
-      this.persistDayUpdate(newDay);
+      var newPlan = this.updatePlanWithDay(newDay);
+      this.persistTrainingPlanUpdate(newPlan);
+      this.showSuccessSavedAlert();
+    }
+
+    handleWorkoutCoachNotesTextChange(notesText, day) {
+      var newDay = day;
+      newDay.workout.workoutType.workoutTypeDescription = notesText;
+      var newPlan = this.updatePlanWithDay(newDay);
+      this.persistTrainingPlanUpdate(newPlan);
       this.showSuccessSavedAlert();
     }
 
     handleTitleChange(titleText, plan){
-      console.log("update pla to: " + JSON.stringify(plan));
       var newPlan = plan;
       newPlan.title = titleText;
       this.persistTrainingPlanUpdate(newPlan);
@@ -71,7 +99,6 @@ export default class App extends React.Component {
             }
       };
       console.log("http://localhost:8080/rest/plan/" + plan.planUniqueId);
-      console.log(JSON.stringify(plan));
       fetch("http://localhost:8080/rest/plan/" + plan.planUniqueId, putRequestOptions)
         .then(res => res.json())
         .then(
@@ -87,20 +114,6 @@ export default class App extends React.Component {
                 error
               });
           })
-    }
-
-    persistDayUpdate(day){
-      const postRequestOptions = {
-          method: 'PUT',
-          body: JSON.stringify(day),
-          headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-      };
-      console.log("http://localhost:8080/rest/day/" + day.id);
-      console.log(JSON.stringify(day));
-      fetch("http://localhost:8080/rest/day/" + day.id, postRequestOptions)
     }
 
     handleAddNewWeekOnClick(){
@@ -155,7 +168,6 @@ export default class App extends React.Component {
           .then(res => res.json())
           .then(
             (result) => {
-              console.log("create coach result: " + result);
               this.setState({
                 coach: result
               });
@@ -245,7 +257,6 @@ export default class App extends React.Component {
                 coach: result,
                 userSignedIn: true
               });
-              console.log(this.state)
               window.location.pathname = "/coach/" + this.state.coach.id + "/dashboard/plan/" + this.state.coach.plans[0].planUniqueId;
             },
             (error) => {
@@ -272,11 +283,13 @@ export default class App extends React.Component {
               <TrainingPlan loadTrainingPlan={this.loadTrainingPlan}
                             plan={this.state.plan}
                             createNewTrainingPlan={this.createNewTrainingPlan}
-                            handleReviewTextChange={this.handleReviewTextChange}
+                            handleUserLogTextChange={this.handleUserLogTextChange}
                             handleWorkoutTextChange={this.handleWorkoutTextChange}
+                            handleWorkoutCoachNotesTextChange={this.handleWorkoutCoachNotesTextChange}
                             handleAddNewWeekOnClick={this.handleAddNewWeekOnClick}
                             match={this.props.match}
-                            handleTitleChange={this.handleTitleChange}/>
+                            handleTitleChange={this.handleTitleChange}
+                            handleRunTypeClick={this.handleRunTypeClick}/>
             </Route>
 
             {/* Note how these two routes are ordered. The more specific
@@ -287,11 +300,13 @@ export default class App extends React.Component {
               <TrainingPlan loadTrainingPlan={this.loadTrainingPlan}
                             plan={this.state.plan}
                             createNewTrainingPlan={this.createNewTrainingPlan}
-                            handleReviewTextChange={this.handleReviewTextChange}
+                            handleUserLogTextChange={this.handleUserLogTextChange}
                             handleWorkoutTextChange={this.handleWorkoutTextChange}
+                            handleWorkoutCoachNotesTextChange={this.handleWorkoutCoachNotesTextChange}
                             handleAddNewWeekOnClick={this.handleAddNewWeekOnClick}
                             match={this.props.match}
-                            handleTitleChange={this.handleTitleChange}/>
+                            handleTitleChange={this.handleTitleChange}
+                            handleRunTypeClick={this.handleRunTypeClick}/>
             </Route>
 
             <Route path="/createCoach">
@@ -303,12 +318,14 @@ export default class App extends React.Component {
                               plan={this.state.plan}
                               loadCoach={this.loadCoach}
                               loadTrainingPlan={this.loadTrainingPlan}
-                              handleReviewTextChange={this.handleReviewTextChange}
+                              handleUserLogTextChange={this.handleUserLogTextChange}
                               handleWorkoutTextChange={this.handleWorkoutTextChange}
+                              handleWorkoutCoachNotesTextChange={this.handleWorkoutCoachNotesTextChange}
                               handleAddNewWeekOnClick={this.handleAddNewWeekOnClick}
                               match={this.props.match}
                               handleAddNewPlanOnClick={this.handleAddNewPlanOnClick}
-                              handleTitleChange={this.handleTitleChange}/>
+                              handleTitleChange={this.handleTitleChange}
+                              handleRunTypeClick={this.handleRunTypeClick}/>
             </Route>
 
             {/* If none of the previous routes render anything,

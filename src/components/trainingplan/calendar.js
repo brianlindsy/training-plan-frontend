@@ -7,7 +7,10 @@ export default class Calendar extends React.Component {
       const renderedWeeks = this.props.plan.weeks.map((week, weekNumber) =>
           <Week key={week.id} days={week.days} className="card-deck" weekNumber={weekNumber+1}
                 handleWorkoutTextChange={this.props.handleWorkoutTextChange}
-                handleReviewTextChange={this.props.handleReviewTextChange}/>
+                handleUserLogTextChange={this.props.handleUserLogTextChange}
+                handleWorkoutCoachNotesTextChange={this.props.handleWorkoutCoachNotesTextChange}
+                runTypes={this.props.runTypes}
+                handleRunTypeClick={this.props.handleRunTypeClick}/>
       );
     	return (
     		<div>

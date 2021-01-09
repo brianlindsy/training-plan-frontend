@@ -17,11 +17,12 @@ class CoachDashboard extends React.Component {
     	return (
       		<div className="coachDashboard">
                 <NavBarTop coach={this.props.coach}/>
-                <div class="d-flex flex-row" >
+                <div class="d-flex" >
                 <SideBar plans={this.props.coach.plans} coachId={this.props.match.params.coachId}
                           handleAddNewPlanOnClick={this.props.handleAddNewPlanOnClick}/>
           	    <TrainingPlan handleReviewTextChange={this.props.handleReviewTextChange}
           				            handleWorkoutTextChange={this.props.handleWorkoutTextChange}
+                              handleWorkoutCoachNotesTextChange={this.props.handleWorkoutCoachNotesTextChange}
           				            plan={this.props.plan}
                               handleAddNewWeekOnClick={this.props.handleAddNewWeekOnClick}
                               loadTrainingPlan={this.props.loadTrainingPlan}

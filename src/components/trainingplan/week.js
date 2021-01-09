@@ -5,17 +5,19 @@ import './trainingplan.css';
 
 export default class Week extends React.Component {
   	render() {
-      console.log(this.props.days);
   		const renderedDays = this.props.days.map((day) => 
         <Day day={day}
           key={day.id}
           handleWorkoutTextChange={this.props.handleWorkoutTextChange}
-          handleReviewTextChange={this.props.handleReviewTextChange} />
+          handleUserLogTextChange={this.props.handleUserLogTextChange}
+          handleWorkoutCoachNotesTextChange={this.props.handleWorkoutCoachNotesTextChange}
+          runTypes={this.props.runTypes} 
+          handleRunTypeClick={this.props.handleRunTypeClick}/>
       );
       return (
         <div id={"Week" + this.props.weekNumber}>
         <label>Week {this.props.weekNumber}</label>
-            <div class="d-flex flex-row flex-nowrap overflow-auto">
+            <div className="d-flex flex-row flex-nowrap overflow-auto">
               {renderedDays}
             </div>
         </div>

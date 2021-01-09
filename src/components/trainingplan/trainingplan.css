@@ -1,13 +1,30 @@
 .card {
-    min-height: 400px;
-    min-width: 300px;
-    margin-right: 5px;
+    min-height: 500px;
+    min-width: 400px;
+    margin-right: 10px;
+    box-shadow: 2px 4px 15px 0px rgba(0, 0, 0, 0.5);
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-p {
-   font-size: 13px!important;
+.card.border-easy-run {
+    border-color: rgba(3, 252, 28, 1);
+    background-color: rgba(3, 252, 28, 1);
+}
+
+.card.border-moderate-run {
+    border-color: rgba(255, 255, 0, 1);
+    background-color: rgba(255, 255, 0, 1);
+}
+
+.card.border-long-run {
+    border-color: rgba(255, 157, 0, 1);
+    background-color: rgba(255, 157, 0, 1);
+}
+
+.card.border-speed-run {
+    border-color: rgba(255, 55, 0, 1);
+    background-color: rgba(255, 55, 0, 1);
 }
