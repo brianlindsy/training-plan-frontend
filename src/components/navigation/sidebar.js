@@ -9,7 +9,7 @@ export default class SideBar extends React.Component {
     		<SideBarItem key={plan.id} planUniqueId={plan.planUniqueId} coachId={this.props.coachId} plan={plan}/>
     	);
     	return (
-    		<nav className="col-md-2 bg-light sidebar">
+    		<nav className="col-md-2 bg-light c-sidebar">
           <AddNewTrainingPlanButton handleAddNewPlanOnClick={this.props.handleAddNewPlanOnClick}/>
     			<div className="sidebar-sticky">
             <ul className="nav flex-column">

@@ -3,6 +3,7 @@ import Week from './week.js';
 import 'bootstrap/dist/css/bootstrap.css';
 
 export default class Calendar extends React.Component {
+
   	render() {
       const renderedWeeks = this.props.plan.weeks.map((week, weekNumber) =>
           <Week key={week.id} days={week.days} className="card-deck" weekNumber={weekNumber+1}

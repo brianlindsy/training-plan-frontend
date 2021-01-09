@@ -17,18 +17,13 @@ export default class RunTypeDropdown extends React.Component {
         <li class="dropdown-item" key={runType} onClick={this.runTypeOnClick} value={runType}>{runType}</li>
       );
 		return (
-			<div class="form-row">
-        <div class="col">
           <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="runTypeDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Run Type
+            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="runTypeDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             </button>
             <ul class="dropdown-menu" id="runTypeDropdownMenu" aria-labelledby="runTypeDropdownMenuButton">
               {renderedOptions}
             </ul>
           </div>
-        </div>
-      </div>
 		);
 	}
 }

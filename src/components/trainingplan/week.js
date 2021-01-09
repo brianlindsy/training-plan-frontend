@@ -16,8 +16,8 @@ export default class Week extends React.Component {
       );
       return (
         <div id={"Week" + this.props.weekNumber}>
-        <label>Week {this.props.weekNumber}</label>
-            <div className="d-flex flex-row flex-nowrap overflow-auto">
+        <h3>Week {this.props.weekNumber}  <span class="badge badge-pill badge-secondary">Training Phase Here</span></h3>
+            <div className="d-flex flex-row flex-nowrap overflow-auto mr-2">
               {renderedDays}
             </div>
         </div>

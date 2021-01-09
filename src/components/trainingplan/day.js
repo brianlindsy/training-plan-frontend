@@ -22,6 +22,10 @@ export default class Day extends React.Component {
           return "border-long-run";
         } else if(workoutTypeName === "SPEED"){
           return "border-speed-run";
+        } else if (workoutTypeName === "REST"){
+          return "border-rest";
+        } else if (workoutTypeName === "TEMPO"){
+          return "border-tempo-run";
         }
       }
     }

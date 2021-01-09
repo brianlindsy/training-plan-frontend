@@ -7,6 +7,8 @@ import Home from './components/scenes/home.js';
 import NavBarTop from './components/navigation/navbartop.js';
 import $ from 'jquery';
 
+const reload = () => window.location.reload();
+
 export default class App extends React.Component {
 	constructor(props) {
     	super(props);
@@ -20,6 +22,7 @@ export default class App extends React.Component {
       		plan:{planUniqueId:null, weeks:[{days:[]}]}
     	};
 
+      this.updatePlanWithDay = this.updatePlanWithDay.bind(this);
       this.handleRunTypeClick = this.handleRunTypeClick.bind(this);
       this.handleTitleChange = this.handleTitleChange.bind(this);
       this.signInOrCreateCoach = this.signInOrCreateCoach.bind(this);
@@ -29,6 +32,7 @@ export default class App extends React.Component {
       this.loadTrainingPlan = this.loadTrainingPlan.bind(this);
       this.showSuccessSavedAlert = this.showSuccessSavedAlert.bind(this);
       this.handleAddNewWeekOnClick = this.handleAddNewWeekOnClick.bind(this);
+      this.handleWorkoutTextChange = this.handleWorkoutTextChange.bind(this);
     	this.handleUserLogTextChange = this.handleUserLogTextChange.bind(this);
     	this.handleWorkoutCoachNotesTextChange = this.handleWorkoutCoachNotesTextChange.bind(this);
       this.persistTrainingPlanUpdate = this.persistTrainingPlanUpdate.bind(this);
@@ -327,16 +331,7 @@ export default class App extends React.Component {
                               handleTitleChange={this.handleTitleChange}
                               handleRunTypeClick={this.handleRunTypeClick}/>
             </Route>
-
-            {/* If none of the previous routes render anything,
-            this route acts as a fallback.
-
-            Important: A route with path="/" will *always* match
-            the URL because all URLs begin with a /. So that's
-            why we put this one last of all */}
-            <Route path="/">
-              <Home />
-            </Route>
+            <Route path="/landing.html" onEnter={reload} />
       </Switch>
     </div>
   );
