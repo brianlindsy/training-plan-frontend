@@ -9,6 +9,7 @@ class CoachDashboard extends React.Component {
   componentDidMount(){
     const coachId = this.props.match.params.coachId;
     const planId = this.props.match.params.planId;
+    console.log(coachId + planId);
     this.props.loadCoach(coachId);
     this.props.loadTrainingPlan(planId);
   }

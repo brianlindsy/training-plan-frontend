@@ -1,51 +1,30 @@
-import React from "react";
-import {Switch,Route} from "react-router-dom";
+import React, { useState } from "react";
+import {Switch,Route,useRouteMatch} from "react-router-dom";
 import TrainingPlan from './components/scenes/trainingplan.js';
 import CoachDashboard from './components/scenes/coachDashboard.js';
 import CreateCoach from './components/scenes/createCoach.js';
 import Home from './components/scenes/home.js';
 import NavBarTop from './components/navigation/navbartop.js';
+import { httpService } from './httpUtils/httpService.js';
 import $ from 'jquery';
 
 const reload = () => window.location.reload();
 
-export default class App extends React.Component {
-	constructor(props) {
-    	super(props);
-      // dont forget that arrays in the plan object need to be set to empty first because the 
-      // render step (before componentdidmount where data is retrieved) will see it as a null array
-    	this.state = {
-    		  error: null,
-      		isLoaded: false,
-          userSignedIn: false,
-          coach: {plans:[]},
-      		plan:{planUniqueId:null, weeks:[{days:[]}]}
-    	};
+function App() {
+    const [coach, setCoach] = useState({plans:[]});
+    const [plan, setPlan] = useState({planUniqueId:null, weeks:[{days:[]}]});
+    const [userSignedIn, setUserSignedIn] = useState(false);
+    const [error, setError] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
 
-      this.updatePlanWithDay = this.updatePlanWithDay.bind(this);
-      this.handleRunTypeClick = this.handleRunTypeClick.bind(this);
-      this.handleTitleChange = this.handleTitleChange.bind(this);
-      this.signInOrCreateCoach = this.signInOrCreateCoach.bind(this);
-      this.handleAddNewPlanOnClick = this.handleAddNewPlanOnClick.bind(this);
-      this.createNewTrainingPlan = this.createNewTrainingPlan.bind(this);
-      this.loadCoach = this.loadCoach.bind(this);
-      this.loadTrainingPlan = this.loadTrainingPlan.bind(this);
-      this.showSuccessSavedAlert = this.showSuccessSavedAlert.bind(this);
-      this.handleAddNewWeekOnClick = this.handleAddNewWeekOnClick.bind(this);
-      this.handleWorkoutTextChange = this.handleWorkoutTextChange.bind(this);
-    	this.handleUserLogTextChange = this.handleUserLogTextChange.bind(this);
-    	this.handleWorkoutCoachNotesTextChange = this.handleWorkoutCoachNotesTextChange.bind(this);
-      this.persistTrainingPlanUpdate = this.persistTrainingPlanUpdate.bind(this);
-  	}
-
-    showSuccessSavedAlert(){
+    function showSuccessSavedAlert(){
       $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
         $("#success-alert").slideUp(500);
       });
     }
 
-    updatePlanWithDay(dayToAdd){
-      var currentPlan = this.state.plan;
+    function updatePlanWithDay(dayToAdd){
+      var currentPlan = plan;
       currentPlan.weeks.forEach(week => {
         week.days.forEach(day => {
           if(day.id === dayToAdd.id){
@@ -56,284 +35,179 @@ export default class App extends React.Component {
       return currentPlan;
     }
 
-    handleRunTypeClick(selectedRunType, day){
+    function handleRunTypeClick(selectedRunType, day){
       var newDay = day;
       newDay.workout.workoutType.workoutTypeName = selectedRunType;
-      var newPlan = this.updatePlanWithDay(newDay);
-      this.persistTrainingPlanUpdate(newPlan);
+      var newPlan = updatePlanWithDay(newDay);
+      persistTrainingPlanUpdate(newPlan);
     }
 
-    handleUserLogTextChange(reviewText, day) {
+    function handleUserLogTextChange(reviewText, day) {
       var newDay = day;
       newDay.workout.userLogEntry = reviewText;
-      var newPlan = this.updatePlanWithDay(newDay);
-      this.persistTrainingPlanUpdate(newPlan);
-      this.showSuccessSavedAlert();
+      var newPlan = updatePlanWithDay(newDay);
+      persistTrainingPlanUpdate(newPlan);
+      showSuccessSavedAlert();
     }
   
-    handleWorkoutTextChange(workoutText, day) {
+    function handleWorkoutTextChange(workoutText, day) {
       var newDay = day;
       newDay.workout.description = workoutText;
-      var newPlan = this.updatePlanWithDay(newDay);
-      this.persistTrainingPlanUpdate(newPlan);
-      this.showSuccessSavedAlert();
+      var newPlan = updatePlanWithDay(newDay);
+      persistTrainingPlanUpdate(newPlan);
+      showSuccessSavedAlert();
     }
 
-    handleWorkoutCoachNotesTextChange(notesText, day) {
+    function handleWorkoutCoachNotesTextChange(notesText, day) {
       var newDay = day;
       newDay.workout.workoutType.workoutTypeDescription = notesText;
-      var newPlan = this.updatePlanWithDay(newDay);
-      this.persistTrainingPlanUpdate(newPlan);
-      this.showSuccessSavedAlert();
+      var newPlan = updatePlanWithDay(newDay);
+      persistTrainingPlanUpdate(newPlan);
+      showSuccessSavedAlert();
     }
 
-    handleTitleChange(titleText, plan){
+    function handleTitleChange(titleText, plan){
       var newPlan = plan;
       newPlan.title = titleText;
-      this.persistTrainingPlanUpdate(newPlan);
+      persistTrainingPlanUpdate(newPlan);
     }
 
-    persistTrainingPlanUpdate(plan){
-      const putRequestOptions = {
-          method: 'PUT',
-          body: JSON.stringify(plan),
-          headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-      };
-      console.log("http://localhost:8080/rest/plan/" + plan.planUniqueId);
-      fetch("http://localhost:8080/rest/plan/" + plan.planUniqueId, putRequestOptions)
-        .then(res => res.json())
+    function persistTrainingPlanUpdate(plan){
+      httpService.updatePlan(plan.planUniqueId, plan)
         .then(
-          (result) => {
-            this.setState({
-            plan: result
-          });
-          },
-            (error) => {
-              console.log(error);
-              this.setState({
-                isLoaded: true,
-                error
-              });
-          })
-    }
-
-    handleAddNewWeekOnClick(){
-      const putRequestOptions = {
-          method: 'PUT'
-      };
-      fetch("http://localhost:8080/rest/plan/" + this.state.plan.planUniqueId + "/addWeek", putRequestOptions)
-          .then(res => res.json())
-          .then(
             (result) => {
-              this.setState({
-                plan: result
-              });
+              setPlan(result);
             },
             (error) => {
-              console.log(error);
-              this.setState({
-                isLoaded: true,
-                error
-              });
+              setError(true);
           })
     }
 
-    handleAddNewPlanOnClick(){
-      const putRequestOptions = {
-          method: 'PUT'
-      };
-      console.log("http://localhost:8080/rest/coach/" + this.state.coach.id + "/addPlan");
-      fetch("http://localhost:8080/rest/coach/" + this.state.coach.id + "/addPlan", putRequestOptions)
-          .then(res => res.json())
-          .then(
+    function handleAddNewWeekOnClick(){
+      httpService.addWeekToPlan(plan.planUniqueId)
+        .then(
             (result) => {
-              this.loadCoach(this.state.coach.id);
-              this.setState({
-                plan: result
-              });
-          },
-          (error) => {
-            console.log(error);
-            this.setState({
-              isLoaded: true,
-              error
-            });
-          })
-    }
-
-    createCoach(){
-      const postRequestOptions = {
-          method: 'POST'
-      };
-      fetch("http://localhost:8080/rest/coach/", postRequestOptions)
-          .then(res => res.json())
-          .then(
-            (result) => {
-              this.setState({
-                coach: result
-              });
+              setPlan(result);
             },
             (error) => {
-              console.log(error);
-              this.setState({
-                isLoaded: true,
-                error
-              });
+              setError(true);
           })
     }
 
-    loadCoach(coachId){
-      fetch("http://localhost:8080/rest/coach/" + coachId)
-          .then(res => res.json())
-          .then(
+    function handleAddNewPlanOnClick(coachId){
+      httpService.addPlanToCoach(coach.id)
+        .then(
             (result) => {
-              this.setState({
-                coach: result
-              });
+              setPlan(result);
             },
             (error) => {
-              console.log(error);
-              this.setState({
-                isLoaded: true,
-                error
-              });
+              setError(true);
           })
     }
 
-    createNewTrainingPlan(){
-      const postRequestOptions = {
-          method: 'POST'
-      };
-      fetch("http://localhost:8080/rest/plan", postRequestOptions)
-      .then(res1 => res1.json())
-      .then(
+    function loadCoach(coachId){
+      httpService.getCoachById(coachId)
+        .then(
             (result) => {
-              this.setState({
-                isLoaded: true,
-                plan: result
-              });
+              setCoach(result);
+            },
+            (error) => {
+              setError(true);
+          })
+    }
+
+    function createNewTrainingPlan(){
+      httpService.createTrainingPlan()
+        .then(
+            (result) => {
+              setPlan(result);
               window.location.pathname = "/plan/" + result.planUniqueId;
             },
             (error) => {
-              console.log(error);
-              this.setState({
-                isLoaded: true,
-                error
-              });
-      })
-    }
-
-    loadTrainingPlan(planUniqueId){
-      fetch("http://localhost:8080/rest/plan/" + planUniqueId)
-          .then(res => res.json())
-          .then(
-            (result) => {
-              this.setState({
-                plan: result
-              });
-            },
-            (error) => {
-              console.log(error);
-              this.setState({
-                isLoaded: true,
-                error
-              });
+              setError(true);
           })
     }
 
-    signInOrCreateCoach(tokenId){
-      const postRequestOptions = {
-          method: 'POST',
-          body: tokenId.tokenId,
-          headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-      };
-      fetch("http://localhost:8080/rest/coach/validate", postRequestOptions)
-          .then(res => res.json())
-          .then(
+    function loadTrainingPlan(planUniqueId){
+      httpService.getTrainingPlanByUniqueId(planUniqueId)
+        .then(
             (result) => {
-              this.setState({
-                coach: result,
-                userSignedIn: true
-              });
-              window.location.pathname = "/coach/" + this.state.coach.id + "/dashboard/plan/" + this.state.coach.plans[0].planUniqueId;
+              setPlan(result);
             },
             (error) => {
-              console.log(error);
-              this.setState({
-                isLoaded: true,
-                error
-              });
+              setError(true);
           })
     }
 
-    //manageUserSignIn(tokenId){
-    //  this.createOrGetCoach(tokenId.tokenId);
-    //  console.log("coach " + JSON.stringify(this.state.coach));
-    //  window.location.pathname = "/coach/" + this.state.coach.id + "/dashboard/plan/" + this.state.coach.plans[0].planUniqueId;
-    //}
+    function signInOrCreateCoach(tokenId){
+      httpService.validateCoach(tokenId.tokenId)
+        .then(
+            (result) => {
+              setCoach(result);
+              setUserSignedIn(true);
+              window.location.pathname = "/coach/" + coach.id + "/dashboard/plan/" + coach.plans[0].planUniqueId;
+            },
+            (error) => {
+              setError(true);
+          })
+    }
 
-    render(){
+    
       return (
         <div>
           <Switch>
 
           <Route path="/createPlan">
-              <TrainingPlan loadTrainingPlan={this.loadTrainingPlan}
-                            plan={this.state.plan}
-                            createNewTrainingPlan={this.createNewTrainingPlan}
-                            handleUserLogTextChange={this.handleUserLogTextChange}
-                            handleWorkoutTextChange={this.handleWorkoutTextChange}
-                            handleWorkoutCoachNotesTextChange={this.handleWorkoutCoachNotesTextChange}
-                            handleAddNewWeekOnClick={this.handleAddNewWeekOnClick}
-                            match={this.props.match}
-                            handleTitleChange={this.handleTitleChange}
-                            handleRunTypeClick={this.handleRunTypeClick}/>
+              <TrainingPlan loadTrainingPlan={loadTrainingPlan}
+                            plan={plan}
+                            createNewTrainingPlan={createNewTrainingPlan}
+                            handleUserLogTextChange={handleUserLogTextChange}
+                            handleWorkoutTextChange={handleWorkoutTextChange}
+                            handleWorkoutCoachNotesTextChange={handleWorkoutCoachNotesTextChange}
+                            handleAddNewWeekOnClick={handleAddNewWeekOnClick}
+                            handleTitleChange={handleTitleChange}
+                            handleRunTypeClick={handleRunTypeClick}/>
             </Route>
 
             {/* Note how these two routes are ordered. The more specific
             path="/contact/:id" comes before path="/contact" so that
             route will render when viewing an individual contact */}
-            <Route path="/plan/:planId">
-              <NavBarTop/>
-              <TrainingPlan loadTrainingPlan={this.loadTrainingPlan}
-                            plan={this.state.plan}
-                            createNewTrainingPlan={this.createNewTrainingPlan}
-                            handleUserLogTextChange={this.handleUserLogTextChange}
-                            handleWorkoutTextChange={this.handleWorkoutTextChange}
-                            handleWorkoutCoachNotesTextChange={this.handleWorkoutCoachNotesTextChange}
-                            handleAddNewWeekOnClick={this.handleAddNewWeekOnClick}
-                            match={this.props.match}
-                            handleTitleChange={this.handleTitleChange}
-                            handleRunTypeClick={this.handleRunTypeClick}/>
+            <Route path="/plan/:planId" render={(match) => (
+                <>
+                <NavBarTop/>
+                <TrainingPlan loadTrainingPlan={loadTrainingPlan}
+                            plan={plan}
+                            createNewTrainingPlan={createNewTrainingPlan}
+                            handleUserLogTextChange={handleUserLogTextChange}
+                            handleWorkoutTextChange={handleWorkoutTextChange}
+                            handleWorkoutCoachNotesTextChange={handleWorkoutCoachNotesTextChange}
+                            handleAddNewWeekOnClick={handleAddNewWeekOnClick}
+                            handleTitleChange={handleTitleChange}
+                            handleRunTypeClick={handleRunTypeClick}/>
+                </>
+              )}>
             </Route>
 
             <Route path="/createCoach">
-              <CreateCoach signInOrCreateCoach={this.signInOrCreateCoach}/>
+              <CreateCoach signInOrCreateCoach={signInOrCreateCoach}/>
             </Route>
 
-            <Route path="/coach/:coachId/dashboard/plan/:planId">
-              <CoachDashboard coach={this.state.coach}
-                              plan={this.state.plan}
-                              loadCoach={this.loadCoach}
-                              loadTrainingPlan={this.loadTrainingPlan}
-                              handleUserLogTextChange={this.handleUserLogTextChange}
-                              handleWorkoutTextChange={this.handleWorkoutTextChange}
-                              handleWorkoutCoachNotesTextChange={this.handleWorkoutCoachNotesTextChange}
-                              handleAddNewWeekOnClick={this.handleAddNewWeekOnClick}
-                              match={this.props.match}
-                              handleAddNewPlanOnClick={this.handleAddNewPlanOnClick}
-                              handleTitleChange={this.handleTitleChange}
-                              handleRunTypeClick={this.handleRunTypeClick}/>
+            <Route path="/coach/:coachId/dashboard/plan/:planId" render={(match) => (
+              <CoachDashboard coach={coach}
+                              plan={plan}
+                              loadCoach={loadCoach}
+                              loadTrainingPlan={loadTrainingPlan}
+                              handleUserLogTextChange={handleUserLogTextChange}
+                              handleWorkoutTextChange={handleWorkoutTextChange}
+                              handleWorkoutCoachNotesTextChange={handleWorkoutCoachNotesTextChange}
+                              handleAddNewWeekOnClick={handleAddNewWeekOnClick}
+                              handleAddNewPlanOnClick={handleAddNewPlanOnClick}
+                              handleTitleChange={handleTitleChange}
+                              handleRunTypeClick={handleRunTypeClick}/>
+            )}>
             </Route>
             <Route path="/landing.html" onEnter={reload} />
       </Switch>
     </div>
   );
-    }
-}
+} export default App;
