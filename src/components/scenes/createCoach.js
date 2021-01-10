@@ -1,6 +1,6 @@
 import React from 'react';
 import GoogleLogin from 'react-google-login';
-
+import config from '../../config.json';
 
 
 export default class CreateCoach extends React.Component {
@@ -21,7 +21,7 @@ export default class CreateCoach extends React.Component {
               <hr class="my-4"/>
               <GoogleLogin
     			clientId="108407451290-hd8mqsfspv06l5al3ucvm7crd40i94l3.apps.googleusercontent.com"
-    			buttonText="Login to Track My Athlete with Google"
+    			buttonText={"Login to " + config.WEBSITE_NAME + " with Google"}
     			onSuccess={this.props.signInOrCreateCoach}
     			onFailure={this.props.signInOrCreateCoach}
     			cookiePolicy={'single_host_origin'}

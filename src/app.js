@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import {Switch,Route,useRouteMatch} from "react-router-dom";
+import {Switch,Route} from "react-router-dom";
 import TrainingPlan from './components/scenes/trainingplan.js';
 import CoachDashboard from './components/scenes/coachDashboard.js';
 import CreateCoach from './components/scenes/createCoach.js';
-import Home from './components/scenes/home.js';
 import NavBarTop from './components/navigation/navbartop.js';
 import { httpService } from './httpUtils/httpService.js';
 import $ from 'jquery';
@@ -12,7 +11,7 @@ const reload = () => window.location.reload();
 
 function App() {
     const [coach, setCoach] = useState({plans:[]});
-    const [plan, setPlan] = useState({planUniqueId:null, weeks:[{days:[]}]});
+    const [plan, setPlan] = useState({planUniqueId:null, weeks:[{weeklySummary:{trainingPhase:{}}, days:[]}]});
     const [userSignedIn, setUserSignedIn] = useState(false);
     const [error, setError] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);

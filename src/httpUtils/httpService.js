@@ -40,8 +40,3 @@ function updatePlan(id, params) {
 function validateCoach(token) {
     return fetchWrapper.postNoStringify(`${baseUrl}coach/validate`, token);
 }
-
-// prefixed with underscored because delete is a reserved word in javascript
-function _delete(id) {
-    return fetchWrapper.delete(`${baseUrl}/${id}`);
-}
