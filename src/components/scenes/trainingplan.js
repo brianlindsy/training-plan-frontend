@@ -3,6 +3,7 @@ import Calendar from '../trainingplan/calendar.js';
 import AddWeekButton from '../buttons/addWeekButton.js';
 import SkipToWeek from '../navigation/skiptoweek.js';
 import {withRouter} from "react-router-dom";
+import EdiText from 'react-editext';
 
 class TrainingPlan extends React.Component {
     constructor(props) {
@@ -38,7 +39,7 @@ class TrainingPlan extends React.Component {
     handleTitleChange(e) {
       if(this.timeout) clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
-        this.props.handleTitleChange(e.target.value, this.props.plan);
+        this.props.handleTitleChange(e, this.props.plan);
       }, 1000);
     }
 
@@ -51,12 +52,22 @@ class TrainingPlan extends React.Component {
               <strong>Success! </strong> Your information has been saved.
             </div>
             <SkipToWeek plan={this.props.plan}/>
-            <div className="container text-center">
-              <textarea rows="1" cols="50" style={{'fontSize': "22pt","textAlign": "center"}}
-                        className="border-0 font-weight-light"
-                        onChange={this.handleTitleChange}
-                        defaultValue={this.props.plan.title}>
-              </textarea>
+            <div className="row justify-content-center">
+              <EdiText type='textarea'
+                inputProps={{
+                  className: 'textarea',
+                  style: {
+                    outline: 'none',
+                    minWidth: 'auto'
+                  },
+                  rows: 1,
+                  cols: 50
+                }}
+                viewProps= {{
+                    style: {'font-size':'22pt'}
+                  }}
+                value={this.props.plan.title}
+                onSave={this.handleTitleChange}/>
             </div>
           	<Calendar handleUserLogTextChange={this.props.handleUserLogTextChange}
           				      handleWorkoutTextChange={this.props.handleWorkoutTextChange}
