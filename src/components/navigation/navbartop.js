@@ -7,8 +7,8 @@ export default class NavBarTop extends React.Component {
     if(this.props.coach === undefined){
 		  return (
 			  <div>
-			  <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-              <a className="navbar-brand text-white ml-1" href="/">{config.WEBSITE_NAME}</a>
+			  <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+              <a className="navbar-brand ml-1" href="/">{config.WEBSITE_NAME}</a>
             </nav>
         </div>
         );
@@ -17,7 +17,7 @@ export default class NavBarTop extends React.Component {
       <div>
        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
               <a className="navbar-brand" href="/">
-                <a className="navbar-brand text-white ml-1" href="/">{config.WEBSITE_NAME}</a>
+                <a className="navbar-brand ml-1" href="/">{config.WEBSITE_NAME}</a>
               </a>
               <NavBarTopGreeting coach={this.props.coach}/>
             </nav>

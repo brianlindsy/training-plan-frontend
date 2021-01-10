@@ -17,7 +17,7 @@ export default class RunTypeDropdown extends React.Component {
       );
 		return (
           <div class="dropdown">
-            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="runTypeDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="runTypeDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             </button>
             <ul class="dropdown-menu" id="runTypeDropdownMenu" aria-labelledby="runTypeDropdownMenuButton">
               {renderedOptions}
