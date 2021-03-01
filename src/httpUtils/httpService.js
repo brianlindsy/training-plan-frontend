@@ -6,27 +6,27 @@ const baseUrl = configData.SERVER_URL;
 export const httpService = {
     getTrainingPlanByUniqueId,
     createTrainingPlan,
-    getCoachById,
-    addPlanToCoach,
+    getUserById,
+    addPlanToUser,
     addWeekToPlan,
     updatePlan,
-    validateCoach
+    validateUser
 };
 
 function getTrainingPlanByUniqueId(id) {
     return fetchWrapper.get(`${baseUrl}plan/${id}`);
 }
 
-function getCoachById(id) {
-    return fetchWrapper.get(`${baseUrl}coach/${id}`);
+function getUserById(id) {
+    return fetchWrapper.get(`${baseUrl}user/${id}`);
 }
 
 function createTrainingPlan() {
     return fetchWrapper.postNoBody(`${baseUrl}plan`);
 }
 
-function addPlanToCoach(id) {
-    return fetchWrapper.putNoBody(`${baseUrl}coach/${id}/addPlan`);
+function addPlanToUser(id) {
+    return fetchWrapper.putNoBody(`${baseUrl}user/${id}/addPlan`);
 }
 
 function addWeekToPlan(id) {
@@ -37,6 +37,6 @@ function updatePlan(id, params) {
     return fetchWrapper.put(`${baseUrl}plan/${id}`, params);
 }
 
-function validateCoach(token) {
-    return fetchWrapper.postNoStringify(`${baseUrl}coach/validate`, token);
+function validateUser(token) {
+    return fetchWrapper.postNoStringify(`${baseUrl}user/validate`, token);
 }

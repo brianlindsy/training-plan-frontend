@@ -6,7 +6,7 @@ export default class SkipToWeek extends React.Component {
         <a className="dropdown-item" key={week.id + "" + index} href={"#Week" + (index + 1)}>{index+1}</a>
       );
 		return (
-			<div className="form-row mt-1">
+			<div className="form-row mt-1 ml-2">
         <div className="col">
           <div className="dropdown">
             <button className="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

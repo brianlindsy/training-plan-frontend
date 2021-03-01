@@ -13,7 +13,7 @@ export default class AddNewTrainingPlanButton extends React.Component {
 
 	render(){
 		return (
-		  <button onClick={this.handleAddNewPlanOnClick} type="button" className="btn btn-primary mt-3 ml-2">Add New Training Plan +</button>
+		  <button onClick={this.handleAddNewPlanOnClick} type="button" className="btn btn-primary ml-2">Add New Training Plan +</button>
 		);
 	}
 }

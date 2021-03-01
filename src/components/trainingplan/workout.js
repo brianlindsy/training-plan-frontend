@@ -94,8 +94,8 @@ export default class Workout extends React.Component {
                   },
                   rows: 5
                 }}
-                value={this.handleWorkoutCoachNotesTextChange}
-                onSave={this.props.day.workout.workoutType.workoutTypeDescription}/>
+                value={this.props.day.workout.workoutType.workoutTypeDescription}
+                onSave={this.handleWorkoutCoachNotesTextChange}/>
           </div>
         </div>
         </>

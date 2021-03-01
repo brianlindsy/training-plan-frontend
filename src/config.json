@@ -1,4 +1,5 @@
 {
-  "SERVER_URL": "http://54.237.110.46:8080/rest/",
-  "WEBSITE_NAME":"Training Your Best"
+  "SERVER_URL": "http://localhost:8080/rest/",
+  "WEBSITE_NAME":"Training Your Best",
+  "GOOGLE_CLIENT_ID":"108407451290-hd8mqsfspv06l5al3ucvm7crd40i94l3.apps.googleusercontent.com"
 }
